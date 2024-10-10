@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Read the input
+input=$(cat)
+
+# Initialize variables
+current_commit=""
+error_count=0
+total_errors=0
+commit_count=0
+
+# Process each line
+while IFS= read -r line; do
+    if [[ $line == Checking* ]]; then
+        # If there's an existing commit, print its summary if there are errors
+        if [[ -n $current_commit && $error_count -gt 0 ]]; then
+            echo "Commit: $current_commit, Number of ERROR: $error_count"
+        fi
+
+        # Reset counters and set current commit
+        current_commit=$(echo "$line" | awk '{print $2}')
+        error_count=0
+        ((commit_count++))  # Increment the commit count
+    elif [[ $line == *"ERROR:"* ]]; then
+        ((error_count++))
+        ((total_errors++))  # Increment the overall error count
+    fi
+done <<< "$input"
+
+# Print the last commit's summary if it has errors
+if [[ -n $current_commit && $error_count -gt 0 ]]; then
+    echo "Commit: $current_commit, Number of ERROR: $error_count"
+fi
+
+# Print the overall counts
+echo ""
+echo "Overall number of ERROR: $total_errors"
+echo "Total commits checked: $commit_count"
