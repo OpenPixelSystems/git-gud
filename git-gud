@@ -78,11 +78,11 @@ while read -r commit_hash; do
   fi
 
   COMMIT_SUBJECT=$(git log -n 1 $commit_hash --format="%s")
-  # Check: Subject must use a maximum of 50 characters
-  if [ ${#COMMIT_SUBJECT} -le 50 ]; then
-    echo "> OK: Subject length is correct (${#COMMIT_SUBJECT} <= 50)"
+  # Check: Subject must use a maximum of 72 characters
+  if [ ${#COMMIT_SUBJECT} -le 72 ]; then
+    echo "> OK: Subject length is correct (${#COMMIT_SUBJECT} <= 72)"
   else
-    echo "> ERROR: Subject is too long (${#COMMIT_SUBJECT} > 50)"
+    echo "> ERROR: Subject is too long (${#COMMIT_SUBJECT} > 72)"
   fi
 
   COMMIT_BODY=$(git log -n 1 $commit_hash --format="%b")
